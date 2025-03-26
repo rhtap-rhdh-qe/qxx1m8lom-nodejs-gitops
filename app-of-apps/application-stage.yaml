@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: qxx1m8lom-nodejs-stage
+  namespace: rhtap-gitops
+  finalizers: ["resources-finalizer.argocd.argoproj.io"] 
+spec:
+  project: default
+  source:
+    path: ./components/qxx1m8lom-nodejs/overlays/stage
+    repoURL: https://github.com/rhtap-rhdh-qe/qxx1m8lom-nodejs-gitops.git
+    targetRevision: main
+  destination:
+    namespace: rhtap-app-stage
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    managedNamespaceMetadata:
+      labels: 
+        argocd.argoproj.io/managed-by: rhtap-gitops
+    automated: 
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PruneLast=true
+
